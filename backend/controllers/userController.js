@@ -77,9 +77,9 @@ export const login = async (req, res) => {
 
 export const createEmployee = async (req, res) => {
   try {
-    const { name, email, password, role, department } = req.body;
+    const { name, email, password, role, department,phone } = req.body;
 
-    if (!name || !email || !password || !role || !department) {
+    if (!name || !email || !password || !role || !department||!phone) {
       return res.status(400).json({
         message: "all feilds are requierd",
       });
@@ -98,6 +98,7 @@ export const createEmployee = async (req, res) => {
       password: hashedPass,
       role,
       department,
+      phone,
     });
 
     res.status(201).json({

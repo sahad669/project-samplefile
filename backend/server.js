@@ -4,6 +4,7 @@ import connect from "./config/connectDB.js"
 import cors from "cors";
 import departmentRouter from './routes/departmentRouter.js'
 import userRouter from "./routes/userRouter.js"
+import upload from "./middleware/multer.js";
 
 dotenv.config();
 const app = express();
@@ -16,4 +17,18 @@ app.use("/api/users",userRouter)
 connect();
 app.listen(process.env.PORT, () => {
   console.log("server started");
+});
+
+
+app.post("/employee-photo", upload.single("photo"), (req, res) => {
+  try {
+    res.json({
+      success: true,
+      url: req.file.path,       
+      public_id: req.file.filename, 
+    });
+  } catch (error) {
+    console.error("Upload error", error);
+    res.status(500).json({ success: false, error: "Upload failed" });
+  }
 });
