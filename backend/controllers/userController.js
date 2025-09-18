@@ -111,20 +111,7 @@ export const createEmployee = async (req, res) => {
 
 export const getAllEmployees = async (req, res) => {
   try {
-    const { department, name } = req.query;
-
-   
     const filter = { role: "employee" };
-
-    if (department) {
-      filter.department = department; 
-    }
-
-    if (name) {
-      filter.name = { $regex: name, $options: "i" }; 
-    }
-
-   
     const employees = await userModel.find(filter);
 
     if (employees.length === 0) {
