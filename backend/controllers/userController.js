@@ -75,7 +75,7 @@ export const createEmployee = async (req, res) => {
   try {
     const { name, email, password, role, department, phone } = req.body;
 
-    // role has a default in the schema; don't force it to be provided
+   
     if (!name || !email || !password || !department || !phone) {
       return res.status(400).json({ message: "All fields are required (except image)" });
     }
@@ -87,19 +87,18 @@ export const createEmployee = async (req, res) => {
 
     const hashedPass = await bcrypt.hash(password, 10);
 
-    // Pull image data if provided
+   
     let imageurl, public_id;
     if (req.file) {
-      imageurl = req.file.path;      // Cloudinary secure URL
-      public_id = req.file.filename; // Cloudinary public_id
+      imageurl = req.file.path;      
+      public_id = req.file.filename; 
     }
 
     const newEmployee = await userModel.create({
       name,
       email,
       password: hashedPass,
-      role,          // will be "employee" unless you send "admin"
-      department,    // ObjectId of an existing department
+      role,          
       phone,
       imageurl,
       public_id,
