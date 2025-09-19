@@ -1,5 +1,5 @@
 import userModel from "../models/userModel.js";
-import jwt from "jsonwebtoken"
+import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 
 //register
@@ -23,11 +23,11 @@ export const register = async (req, res) => {
     });
 
     const token = jwt.sign(
-      { _id: newUser._id, name: newUser.name,role: newUser.role  },
+      { _id: newUser._id, name: newUser.name, role: newUser.role },
       process.env.JWT_SECRET,
-      { expiresIn: "1d" } 
+      { expiresIn: "1d" }
     );
-    res.status(201).json({ message: "Registered successfully",token });
+    res.status(201).json({ message: "Registered successfully", token });
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
   }
@@ -37,28 +37,24 @@ export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-  
     if (!email || !password) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
-    
     const user = await userModel.findOne({ email });
     if (!user) {
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
-   
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(400).json({ message: "password is wrong" });
     }
 
-    
     const token = jwt.sign(
-      { _id: user._id, name: user.name,role: user.role },
+      { _id: user._id, name: user.name, role: user.role },
       process.env.JWT_SECRET,
-      { expiresIn: "1d" } 
+      { expiresIn: "1d" }
     );
 
     res.status(200).json({
@@ -67,7 +63,7 @@ export const login = async (req, res) => {
       user: {
         _id: user._id,
         name: user.name,
-        role:user.role
+        role: user.role,
       },
     });
   } catch (error) {
@@ -77,12 +73,11 @@ export const login = async (req, res) => {
 
 export const createEmployee = async (req, res) => {
   try {
-    const { name, email, password, role, department,phone } = req.body;
+    const { name, email, password, role, department, phone } = req.body;
 
-    if (!name || !email || !password || !role || !department||!phone) {
-      return res.status(400).json({
-        message: "all feilds are requierd",
-      });
+    // role has a default in the schema; don't force it to be provided
+    if (!name || !email || !password || !department || !phone) {
+      return res.status(400).json({ message: "All fields are required (except image)" });
     }
 
     const userExist = await userModel.findOne({ email });
@@ -92,21 +87,30 @@ export const createEmployee = async (req, res) => {
 
     const hashedPass = await bcrypt.hash(password, 10);
 
+    // Pull image data if provided
+    let imageurl, public_id;
+    if (req.file) {
+      imageurl = req.file.path;      // Cloudinary secure URL
+      public_id = req.file.filename; // Cloudinary public_id
+    }
+
     const newEmployee = await userModel.create({
       name,
       email,
       password: hashedPass,
-      role,
-      department,
+      role,          // will be "employee" unless you send "admin"
+      department,    // ObjectId of an existing department
       phone,
+      imageurl,
+      public_id,
     });
 
-    res.status(201).json({
+    return res.status(201).json({
       message: "Employee created successfully",
       employee: newEmployee,
     });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message });
   }
 };
 
@@ -127,6 +131,7 @@ export const getAllEmployees = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+
 
 export const editEmployee = async (req, res) => {
   try {
@@ -174,4 +179,3 @@ export const getEmployeeById = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-
