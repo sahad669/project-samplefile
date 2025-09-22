@@ -3,8 +3,8 @@ import { getAllDepartment,addDepartment,deleteDepartment } from "../controllers/
 import { isLogged,checkAdmin } from "../middleware/authMiddleware.js";
 const router = express.Router()
 
-router.get('/',isLogged,checkAdmin,getAllDepartment)
-router.post("/",isLogged,checkAdmin,addDepartment);
-router.delete("/:id",isLogged,checkAdmin,deleteDepartment);
+router.get('/getall',isLogged,checkAdmin,getAllDepartment)
+router.post("/add",isLogged,checkAdmin,addDepartment);
+router.delete("/delete/:id",isLogged,checkAdmin,deleteDepartment);
 
 export default router

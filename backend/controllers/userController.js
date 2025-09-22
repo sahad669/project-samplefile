@@ -12,7 +12,7 @@ export const register = async (req, res) => {
 
     const exists = await userModel.findOne({ email });
     if (exists) {
-      return res.status(400).json({ message: "User already exists" });
+      return res.status(400).json({success:false , message: "Email already exists" });
     }
 
     const hashpass = await bcrypt.hash(password, 10);
