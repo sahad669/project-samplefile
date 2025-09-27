@@ -14,7 +14,7 @@ const App = () => {
       <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login />} />
 
-      {/* Admin only */}
+     
       <Route
         path="/admin"
         element={

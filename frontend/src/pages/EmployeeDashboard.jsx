@@ -1,50 +1,92 @@
-import React from 'react'
-import { User, UserCog, FilePlus, LogIn, LogOut } from "lucide-react";
 
+import { useSelector, useDispatch } from "react-redux";
+import { logout } from "../features/authSlice";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import Navbar from "../components/Navbar";
+import EmployeeSidebar from "../components/EmployeeSidebar"
+import { motion } from "framer-motion";
 
 const EmployeeDashboard = () => {
+  const [activeSection, setActiveSection] = useState("dashboard");
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { user } = useSelector((state) => state.auth);
+ 
+
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate("/login");
+  };
+
+  const handleLogin = () => {
+    navigate("/login");
+  };
+
   return (
-    <div className="min-h-screen flex  ">
-      {/* Sidebar */}
-   <aside className="hidden md:flex flex-col bg-[#2176ff] text-white w-64 min-h-screen px-5 py-6">
-  <div className="text-2xl font-bold tracking-wide mb-8 text-center">EMPLOYEE</div>
+    <div className="min-h-screen bg-gradient-to-br from-[#0f172a] via-[#1e293b] to-[#0f172a]">
+      {/* Navbar */}
+      <Navbar title="Employee Dashboard" />
 
-  <nav className="flex-1 space-y-3 mt-6">
-    <button className="w-full flex items-center gap-3 px-4 py-3 rounded-lg border border-white/30 hover:bg-[#1a5edb] transition">
-      <User size={20} /> <span>View Profile</span>
-    </button>
-    <button className="w-full flex items-center gap-3 px-4 py-3 rounded-lg border border-white/30 hover:bg-[#1a5edb] transition">
-      <UserCog size={20} /> <span>Edit Profile</span>
-    </button>
-    <button className="w-full flex items-center gap-3 px-4 py-3 rounded-lg border border-white/30 hover:bg-[#1a5edb] transition">
-      <FilePlus size={20} /> <span>Leave Application</span>
-    </button>
-    <button className="w-full flex items-center gap-3 px-4 py-3 rounded-lg border border-white/30 hover:bg-[#1a5edb] transition">
-      <LogIn size={20} /> <span>Login</span>
-    </button>
-    <button className="w-full flex items-center gap-3 px-4 py-3 rounded-lg border border-white/30 hover:bg-[#1a5edb] transition">
-      <LogOut size={20} /> <span>Logout</span>
-    </button>
-  </nav>
-</aside>
-      {/* Main Section */}
-      <div className="flex-1 flex flex-col">
-        {/* Navbar */}
-        <header className="flex justify-between items-center bg-[#2176ff]  px-6 py-4">
-          <h1 className="text-2xl font-bold text-white">Dashboard</h1>
-          <div className="flex items-center gap-4">
-            <div className="text-right">
-              <div className="font-semibold text-white">Abdul Cadre Hassamo</div>
-              <div className="text-gray-300 text-sm">admin@admin.com</div>
+      {/* Sidebar and Main Content */}
+      <div className="flex">
+        {/* Sidebar */}
+        <div className="w-64 shrink-0">
+          <EmployeeSidebar
+            activeSection={activeSection}
+            setActiveSection={setActiveSection}
+            handleLogin={handleLogin}
+            handleLogout={handleLogout}
+            user={user}
+          />
+        </div>
+
+        
+        <main
+          className="flex-1 min-h-screen p-6 flex flex-col items-center justify-start pt-20
+                     bg-[url('https://shiftin.app/wp-content/uploads/2021/10/what-are-employee-management-systems.jpg')]
+                     bg-cover bg-center"
+        >
+          {activeSection === "dashboard" && (
+            <div className="flex flex-col items-center w-full gap-6 max-w-6xl">
+              {/* Quote */}
+              <motion.p
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                className="text-center text-xl md:text-2xl text-[#38bdf8] italic font-semibold max-w-2xl"
+              >
+                "Success is the sum of small efforts, repeated day in and day out." 
+              </motion.p>
+              {/* Recent Announcements & News Section */}
+<motion.div
+  initial={{ opacity: 0, y: 40 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.5 }}
+  className="w-full max-w-2xl bg-[#1e293b] p-5 rounded-lg shadow-lg mb-8"
+>
+  <h2 className="text-lg md:text-xl font-semibold text-[#38bdf8] mb-3">Recent Announcements</h2>
+  <ul className="space-y-3">
+    <li className="text-base text-white border-b border-[#38bdf8] pb-2">
+      🚀 Company launches new benefits program effective October 1st.
+    </li>
+    <li className="text-base text-white border-b border-[#38bdf8] pb-2">
+      📰 Q3 townhall scheduled for October 16th – join on Teams at 4pm.
+    </li>
+    <li className="text-base text-white pb-2">
+      🎉 Welcome new team members in the Engineering and HR departments!
+    </li>
+  </ul>
+</motion.div>
+
             </div>
-           
-          </div>
-        </header>
+          )}
 
-       
+          
+        </main>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default EmployeeDashboard
+export default EmployeeDashboard;

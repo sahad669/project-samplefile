@@ -12,7 +12,7 @@ export const register = async (req, res) => {
 
     const exists = await userModel.findOne({ email });
     if (exists) {
-      return res.status(400).json({success:false , message: "Email already exists" });
+      return res.status(400).json({ message: "Email already exists" });
     }
 
     const hashpass = await bcrypt.hash(password, 10);
@@ -43,7 +43,7 @@ export const login = async (req, res) => {
 
     const user = await userModel.findOne({ email });
     if (!user) {
-      return res.status(400).json({ message: "Invalid credentials" });
+      return res.status(400).json({ message: "Email Not Found Register!" });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
@@ -58,12 +58,13 @@ export const login = async (req, res) => {
     );
 
     res.status(200).json({
-      message: "Login successful",
+      message: "Loged in successfully",
       token,
       user: {
         _id: user._id,
         name: user.name,
         role: user.role,
+        email:user.email,
       },
     });
   } catch (error) {

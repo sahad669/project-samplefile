@@ -4,7 +4,7 @@ import departmentModel from "../models/departmentModel.js";
 export const addDepartment = async (req, res) => {
   const { department, description } = req.body;
   if (!department || !description) {
-    return res.json({ error: "fill all the fields" });
+    return res.status(400).json({ message: "fill all the fields" });
   }
   const newDepartment = await departmentModel.create({ department, description });
   res.status(201).json({ message: "Department Created Successfully", newDepartment });
@@ -12,12 +12,14 @@ export const addDepartment = async (req, res) => {
 
 // get all departments
 export const getAllDepartment = async (req, res) => {
-  const department = await departmentModel.find({});
-  if (department.length === 0) {
-    return res.json({ error: "No Department Found" });
+  try {
+    const departments = await departmentModel.find({});
+    res.json(departments); 
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
-  res.json(department);
 };
+
 
 // delete department
 export const deleteDepartment = async (req, res) => {
@@ -25,7 +27,7 @@ export const deleteDepartment = async (req, res) => {
     const id = req.params.id;
     const deleteDepartment = await departmentModel.findByIdAndDelete(id);
     if (!deleteDepartment) {
-      return res.status(404).json({ error: "Department Not Found" });
+      return res.status(404).json({ message: "Department Not Found" });
     }
     res.json({ message: "Department Deleted Successfully" });
   } catch (error) {

@@ -1,85 +1,87 @@
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
 import { login } from "../features/authSlice";
-import toast, { Toaster } from "react-hot-toast";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-  const [form, setForm] = useState({ email: "", password: "" });
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [data, setData] = useState({ email: "", password: "" });
 
-  const handleChange = (e) =>
-    setForm({ ...form, [e.target.name]: e.target.value });
+  const handleData = (e) => {
+    const { name, value } = e.target;
+    setData((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const data = await dispatch(login(form)).unwrap();
-      toast.success("Login successful");
-      if(data.user.role === "admin"){
-        navigate("/admin") 
-      }else{
-        navigate("/employee")
-      }
-    } catch (err) {
-      const errorMessage = 
-      err?.response?.data?.message || err?.message || "login failed"
-      toast.error(errorMessage)
+  e.preventDefault();
+
+  try {
+    const res = await dispatch(login(data)).unwrap()
+    if (res.user.role === "admin") {
+      navigate("/admin");
+    } else {
+      navigate("/employee");
     }
-  };
+  } catch (error) {
+    console.error("Login failed:", error);
+  }
+};
 
   return (
     <div
-      className="h-screen flex items-center justify-center bg-cover bg-center px-4 sm:px-6 md:px-8"
+      className="min-h-screen flex flex-col items-center justify-center bg-cover bg-center px-4"
       style={{
         backgroundImage:
-          "url('https://media.istockphoto.com/id/1830042746/photo/document-management-system-dms-with-arrange-folder-and-files-icons-man-setup-storage-backup.jpg?s=612x612&w=0&k=20&c=t8oAAO16j6fMhleAYJEXm5pSXFIDZrEG6sYJkv_Sdos=')",
+          "url('https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=1350&q=80')",
       }}
     >
-      <div className="bg-[rgba(30,45,83,0.7)] p-6 sm:p-8 md:p-10 rounded-2xl shadow-2xl w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg text-white">
-        <h2 className="text-3xl font-bold text-center mb-6 tracking-tight">Login</h2>
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <input
-            type="email"
-            name="email"
-            value={form.email}
-            onChange={handleChange}
-            placeholder="Enter Your Email"
-            required
-            className="w-full px-4 py-3 rounded-lg bg-[#f0f4fa] text-[#1e2d53] font-medium focus:ring-2 focus:ring-[#2176ff] outline-none transition"
-          />
-          <input
-            type="password"
-            name="password"
-            value={form.password}
-            onChange={handleChange}
-            placeholder="Enter Your Password"
-            required
-            className="w-full px-4 py-3 rounded-lg bg-[#f0f4fa] text-[#1e2d53] font-medium focus:ring-2 focus:ring-[#2176ff] outline-none transition"
-          />
-          <button
-            type="submit"
-            className="w-full py-3 bg-[#2176ff] hover:bg-[#1858c3] rounded-lg font-semibold text-lg transition tracking-wide shadow-lg"
-          >
-            Login
-          </button>
-        </form>
-        <p className="text-center text-gray-300 mt-4 sm:mt-5 text-sm sm:text-base">
-      Don't have an account?{" "}
-      <span
-        className="text-[#2176ff] hover:underline cursor-pointer"
-        onClick={() => navigate("/register")}
+      <form
+        onSubmit={handleSubmit}
+        className="bg-[rgba(30,45,83,0.7)] backdrop-blur-lg p-8 rounded-2xl shadow-lg w-full max-w-md"
       >
-        Register
-      </span>
-    </p>
-      </div>
-      <Toaster />
-    </div>
+        <h2 className="text-2xl font-bold text-center text-[#2176ff] mb-6">
+          Login
+        </h2>
+
+        <input
+          onChange={handleData}
+          type="email"
+          name="email"
+          value={data.email}
+          placeholder="Enter Email Address"
+          className="w-full px-4 py-3 mb-4 rounded-lg bg-gray-800 text-white placeholder-gray-400 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
+        />
+
+        <input
+          onChange={handleData}
+          type="password"
+          name="password"
+          value={data.password}
+          placeholder="Enter Password"
+          className="w-full px-4 py-3 mb-6 rounded-lg bg-gray-800 text-white placeholder-gray-400 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
+        />
+
+        <button
+          type="submit"
+          className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-4 rounded-lg shadow-md transition"
+        >
+          Login
+        </button>
+         <p className="text-center text-gray-300 mt-4 sm:mt-5 text-sm sm:text-base">
+        Don't have an account?{" "}
+        <span
+          className="text-[#2176ff] hover:underline cursor-pointer"
+          onClick={() => navigate("/register")}
+        >
+          Register
+        </span>
+      </p>
+      </form>
+
      
+    </div>
   );
 };
 
 export default Login;
-
