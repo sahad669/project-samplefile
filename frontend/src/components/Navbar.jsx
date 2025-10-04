@@ -16,7 +16,6 @@ const Navbar = ({ title }) => {
         {title}
       </h1>
       <div className="flex items-center gap-6">
-       
         {user && user.email ? (
           <div className="text-right">
             <div className="font-semibold text-white">{user.email}</div>

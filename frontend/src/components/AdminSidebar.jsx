@@ -20,12 +20,12 @@ const AdminSidebar = ({
         </button>
 
         <button
-          onClick={() => setActiveSection("employees")}
+          onClick={() => setActiveSection("addEmployees")}
           className={`w-full bg-[#38bdf8] text-white py-3 rounded-lg font-semibold hover:bg-[#0ea5e9] transition ${
-            activeSection === "employees" ? "bg-[#38bdf8]" : ""
+            activeSection === "addEmployees" ? "bg-[#38bdf8]" : ""
           }`}
         >
-          ➕👥 <span>Add Employees</span>
+          ➕👥 <span>Add & Edit</span>
         </button>
 
         <button
@@ -36,17 +36,17 @@ const AdminSidebar = ({
         >
           ➕📋 <span>Add Departments</span>
         </button>
-
         <button
-          onClick={() => setActiveSection("reports")}
-          className={`w-full bg-[#38bdf8] text-white py-3 rounded-lg font-semibold hover:bg-[#0ea5e9] transition${
-            activeSection === "reports" ? "bg-[#38bdf8]" : ""
-          }`}
-        >
-          📊 <span>Reports</span>
-        </button>
+  onClick={() => setActiveSection("attendance")}
+  className={`w-full bg-[#38bdf8] text-white py-3 rounded-lg font-semibold hover:bg-[#0ea5e9] transition ${
+    activeSection === "attendance" ? "bg-[#38bdf8]" : ""
+  }`}
+>
+  📅 <span>Attendance</span>
+</button>
 
-      
+       
+
         {!user ? (
           <button
             onClick={handleLogin}

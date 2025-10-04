@@ -18,11 +18,11 @@ router.post(
   "/create",
   isLogged,
   checkAdmin,
-  upload.single("photo"),
+  upload.single("image"),
   createEmployee
 );
 router.get("/getall", isLogged, checkAdmin, getAllEmployees);
-router.patch("/edit/:id", isLogged, editEmployee);
+router.patch("/edit/:id", isLogged, upload.single("image"), editEmployee);
 router.delete("/delete/:id", isLogged, checkAdmin, deleteEmployee);
 router.get("/byid/:id", isLogged, getEmployeeById);
 

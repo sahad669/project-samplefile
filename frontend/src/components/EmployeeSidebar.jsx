@@ -1,6 +1,6 @@
 import React from "react";
 
-const AdminSidebar = ({
+const EmployeeSidebar = ({
   activeSection,
   setActiveSection,
   handleLogin,
@@ -8,38 +8,62 @@ const AdminSidebar = ({
   user,
 }) => {
   return (
-    <aside className="flex fixed top-0 left-0 h-screen flex-col bg-gradient-to-r from-[#0f172a] to-[#1e293b] backdrop-blur-md  w-64  px-5 py-6 z-30 mt-17">
+    <aside
+      className="flex fixed top-0 left-0 h-screen flex-col 
+                     bg-gradient-to-r from-[#0f172a] to-[#1e293b] 
+                     backdrop-blur-md w-64 px-5 py-6 z-30 mt-17"
+    >
       <nav className="flex-1 flex flex-col space-y-3 mt-8">
+        {/* Dashboard */}
         <button
           onClick={() => setActiveSection("dashboard")}
-          className={`w-full bg-[#38bdf8] text-white py-3 rounded-lg font-semibold hover:bg-[#0ea5e9] transition ${
-            activeSection === "dashboard" ? "bg-[#38bdf8]" : ""
-          }`}
+          className={`w-full text-white py-3 rounded-lg font-semibold transition 
+            ${
+              activeSection === "dashboard"
+                ? "bg-[#38bdf8]"
+                : "hover:bg-[#0ea5e9]"
+            }`}
         >
           🏠 <span>Dashboard</span>
         </button>
 
+        {/* View Profile */}
         <button
-          onClick={() => setActiveSection("employees")}
-          className={`w-full bg-[#38bdf8] text-white py-3 rounded-lg font-semibold hover:bg-[#0ea5e9] transition ${
-            activeSection === "employees" ? "bg-[#38bdf8]" : ""
-          }`}
+          onClick={() => setActiveSection("viewProfile")}
+          className={`w-full text-white py-3 rounded-lg font-semibold transition 
+            ${
+              activeSection === "viewProfile"
+                ? "bg-[#38bdf8]"
+                : "hover:bg-[#0ea5e9]"
+            }`}
         >
-          👥 <span>View Profile</span>
+          👤 <span>View Profile</span>
         </button>
 
+        {/* Edit Profile */}
         <button
-          onClick={() => setActiveSection("addDepartment")}
-          className={`w-full bg-[#38bdf8] text-white py-3 rounded-lg font-semibold hover:bg-[#0ea5e9] transition${
-            activeSection === "addDepartment" ? "bg-[#38bdf8]" : ""
+          onClick={() => setActiveSection("editProfile")}
+          className={`w-full text-white py-3 rounded-lg font-semibold transition 
+            ${
+              activeSection === "editProfile"
+                ? "bg-[#38bdf8]"
+                : "hover:bg-[#0ea5e9]"
+            }`}
+        >
+          ✏️ <span>Edit Profile</span>
+        </button>
+        <button
+          onClick={() => setActiveSection("attendance")}
+          className={`w-full text-white py-3 rounded-lg font-semibold transition ${
+            activeSection === "attendance"
+              ? "bg-[#38bdf8]"
+              : "hover:bg-[#0ea5e9]"
           }`}
         >
-          👥 <span>Edit Profile</span>
+          📅 <span>Attendance</span>
         </button>
 
-       
-
-      
+        {/* Auth Buttons */}
         {!user ? (
           <button
             onClick={handleLogin}
@@ -60,4 +84,4 @@ const AdminSidebar = ({
   );
 };
 
-export default AdminSidebar;
+export default EmployeeSidebar;

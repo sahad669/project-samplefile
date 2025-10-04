@@ -20,7 +20,7 @@ app.listen(process.env.PORT, () => {
 });
 
 
-app.post("/employee-photo", upload.single("photo"), (req, res) => {
+app.post("/employee-image", upload.single("image"), (req, res) => {
   try {
     res.json({
       success: true,
