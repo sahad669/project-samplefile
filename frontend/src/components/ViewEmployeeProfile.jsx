@@ -1,12 +1,15 @@
-
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getEmployeeById } from "../features/employeeSlice";
 import { Loader2 } from "lucide-react";
+import { motion } from "framer-motion";
 
 const ViewEmployeeProfile = () => {
   const dispatch = useDispatch();
-  const { employeeDetails, loading, error } = useSelector((state) => state.employee);
+  const { employeeDetails, loading, error } = useSelector(
+    (state) => state.employee
+  );
+  const { darkMode } = useSelector((state) => state.theme);
 
   const user = JSON.parse(localStorage.getItem("user"));
   const id = user?._id;
@@ -15,48 +18,170 @@ const ViewEmployeeProfile = () => {
     if (id) dispatch(getEmployeeById(id));
   }, [dispatch, id]);
 
-  if (loading) return <Loader2 className="animate-spin w-10 h-10 mx-auto mt-20" />;
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center mt-20">
+        <Loader2
+          className={`w-12 h-12 animate-spin ${
+            darkMode ? "text-[#FDC500]" : "text-[#FFCC00]"
+          }`}
+        />
+      </div>
+    );
+  }
+
   if (error) return <p className="text-red-500 text-center">{error}</p>;
-  if (!employeeDetails) return <p className="text-gray-500 text-center">No profile found</p>;
+
+  if (!employeeDetails)
+    return (
+      <p
+        className={`text-center py-10 ${
+          darkMode ? "text-[#FFCC00]" : "text-[#0A0A0A]"
+        }`}
+      >
+        No profile found
+      </p>
+    );
 
   return (
-    <div className="relative w-full max-w-7xl mx-auto px-4 py-10 space-y-6 bg-gradient-to-br from-[#1e293b] to-[#0f172a] text-white rounded-2xl shadow-2xl overflow-hidden">
-
-      {/* Background stickers */}
-      <span className="absolute top-10 left-[-50px] w-40 h-40 bg-cyan-500 rounded-full opacity-20 animate-pulse"></span>
-      <span className="absolute bottom-10 right-[-60px] w-56 h-56 bg-purple-500 rounded-full opacity-20 animate-pulse"></span>
-      <span className="absolute top-20 right-[-30px] w-32 h-32 bg-pink-500 rounded-full opacity-10 animate-bounce"></span>
-
-      {/* Welcome message */}
-      <h2 className="text-4xl font-extrabold text-cyan-400 mb-6 animate-fade-in text-center p-5">
-        Welcome, {user?.name || "Employee"}!
+    <motion.div
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}
+      className={`relative w-full max-w-2xl mx-auto px-6 py-10 rounded-3xl shadow-2xl border transition-colors duration-300 ${
+        darkMode
+          ? "bg-gradient-to-br from-[#112d4e] via-[#274472] to-[#47CFFF] border-[#198FFF]/40 text-[#A1F6FF]"
+          : "bg-gradient-to-br from-[#E3EDF7] via-[#A5CDF2] to-[#7DF9FF] border-[#5B99ED]/40 text-[#274472]"
+      }`}
+      style={{ minHeight: "32rem" }}
+    >
+      <h2
+        className={`text-2xl font-extrabold text-center mb-6 tracking-wide ${
+          darkMode ? "text-[#82E0FA]" : "text-[#198FFF]"
+        }`}
+      >
+        Welcome, {user?.name || "Employee"} !
       </h2>
 
-      <div className="flex flex-col md:flex-row items-center md:items-start gap-10 animate-fade-in-up">
-
-        {/* Employee Image */}
-        <div className="relative group">
-          <img
-            src={employeeDetails.imageurl || "https://via.placeholder.com/200"}
-            alt={employeeDetails.name}
-            className="w-56 h-56 md:w-64 md:h-64 rounded-xl shadow-xl object-cover border-4 border-cyan-400 transform transition-transform duration-500 group-hover:scale-105"
-          />
-          <div className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 bg-cyan-400 text-black px-3 py-1 rounded-full text-sm opacity-70">
-            {employeeDetails.role.toUpperCase()}
-          </div>
+      {/* Profile Image */}
+      <div className="flex justify-center mb-8 relative">
+        <img
+          src={employeeDetails.imageurl || "https://via.placeholder.com/200"}
+          alt={employeeDetails.name}
+          className="w-48 h-48 rounded-full object-cover border-[6px] border-[#47CFFF] shadow-lg transition-transform duration-300 hover:scale-105"
+        />
+        <div className="absolute bottom-0 -mb-6 bg-[#82E0FA] text-[#112d4e] font-bold uppercase px-6 py-1 rounded-full shadow-md">
+          {employeeDetails.role}
         </div>
-
-        {/* Employee Details */}
-        <div className="flex-1 space-y-4 text-lg animate-fade-in-up delay-200">
-          <p><span className="font-semibold text-cyan-300">Name:</span> {employeeDetails.name}</p>
-          <p><span className="font-semibold text-cyan-300">Email:</span> {employeeDetails.email}</p>
-          <p><span className="font-semibold text-cyan-300">Phone:</span> {employeeDetails.phone}</p>
-          <p><span className="font-semibold text-cyan-300">Role:</span> {employeeDetails.role}</p>
-          <p><span className="font-semibold text-cyan-300">Department:</span> {employeeDetails.department?.department || "N/A"}</p>
-        </div>
-
       </div>
-    </div>
+
+      {/* Details Card */}
+      <div
+        className={`bg-opacity-70 p-6 rounded-xl backdrop-blur-md shadow-inner ${
+          darkMode ? "bg-[#112d4e]" : "bg-[#E3EDF7]"
+        }`}
+      >
+        {/* Name */}
+        <div className="flex flex-wrap gap-4 items-center w-full mb-4">
+          <span
+            className={`font-semibold min-w-[100px] ${
+              darkMode ? "text-[#82E0FA]" : "text-[#198FFF]"
+            }`}
+          >
+            Name:
+          </span>
+          <span
+            className={`px-3 py-1 rounded-lg ${
+              darkMode
+                ? "bg-[#274472] text-[#82E0FA]"
+                : "bg-[#D9EEFF] text-[#198FFF]"
+            }`}
+          >
+            {employeeDetails.name}
+          </span>
+        </div>
+
+        {/* Email */}
+        <div className="flex flex-wrap gap-4 items-center w-full mb-4">
+          <span
+            className={`font-semibold min-w-[100px] ${
+              darkMode ? "text-[#82E0FA]" : "text-[#198FFF]"
+            }`}
+          >
+            Email:
+          </span>
+          <span
+            className={`px-3 py-1 rounded-lg ${
+              darkMode
+                ? "bg-[#274472] text-[#82E0FA]"
+                : "bg-[#D9EEFF] text-[#198FFF]"
+            }`}
+          >
+            {employeeDetails.email}
+          </span>
+        </div>
+
+        {/* Phone */}
+        <div className="flex flex-wrap gap-4 items-center w-full mb-4">
+          <span
+            className={`font-semibold min-w-[100px] ${
+              darkMode ? "text-[#82E0FA]" : "text-[#198FFF]"
+            }`}
+          >
+            Phone:
+          </span>
+          <span
+            className={`px-3 py-1 rounded-lg ${
+              darkMode
+                ? "bg-[#274472] text-[#82E0FA]"
+                : "bg-[#D9EEFF] text-[#198FFF]"
+            }`}
+          >
+            {employeeDetails.phone}
+          </span>
+        </div>
+
+        {/* Role */}
+        <div className="flex flex-wrap gap-4 items-center w-full mb-4">
+          <span
+            className={`font-semibold min-w-[100px] ${
+              darkMode ? "text-[#82E0FA]" : "text-[#198FFF]"
+            }`}
+          >
+            Role:
+          </span>
+          <span
+            className={`px-3 py-1 rounded-lg ${
+              darkMode
+                ? "bg-[#274472] text-[#82E0FA]"
+                : "bg-[#D9EEFF] text-[#198FFF]"
+            }`}
+          >
+            {employeeDetails.role}
+          </span>
+        </div>
+
+        {/* Department */}
+        <div className="flex flex-wrap gap-4 items-center w-full mb-2">
+          <span
+            className={`font-semibold min-w-[100px] ${
+              darkMode ? "text-[#82E0FA]" : "text-[#198FFF]"
+            }`}
+          >
+            Department:
+          </span>
+          <span
+            className={`px-3 py-1 rounded-lg ${
+              darkMode
+                ? "bg-[#274472] text-[#82E0FA]"
+                : "bg-[#D9EEFF] text-[#198FFF]"
+            }`}
+          >
+            {employeeDetails.department?.department || "N/A"}
+          </span>
+        </div>
+      </div>
+    </motion.div>
   );
 };
 

@@ -1,21 +1,20 @@
-
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../features/authSlice";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import EmployeeSidebar from "../components/EmployeeSidebar";
 import ViewEmployeeProfile from "../components/ViewEmployeeProfile";
-import EditEmployeeProfile from "../components/EditEmployeeProfile"; 
+import EditEmployeeProfile from "../components/EditEmployeeProfile";
+import Attendance from "../components/Attendance";
 import { motion } from "framer-motion";
 
 const EmployeeDashboard = () => {
   const [activeSection, setActiveSection] = useState("dashboard");
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
   const { user } = useSelector((state) => state.auth);
+  const { darkMode } = useSelector((state) => state.theme);
 
   const handleLogout = () => {
     dispatch(logout());
@@ -26,74 +25,113 @@ const EmployeeDashboard = () => {
     navigate("/login");
   };
 
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0f172a] via-[#1e293b] to-[#0f172a]">
-      {/* Navbar */}
-      <Navbar title="Employee Dashboard" />
+    <div
+      className={`min-h-screen flex flex-col transition-colors duration-300 ${
+        darkMode
+          ? "bg-gradient-to-br from-[#0A2540] via-[#274472] to-[#82E0FA]"
+          : "bg-gradient-to-br from-[#E3EDF7] via-[#A5CDF2] to-[#7DF9FF]"
+      }`}
+    >
+      <Navbar
+        title="Employee Dashboard"
+        onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
+      />
 
-      {/* Sidebar and Main Content */}
-      <div className="flex">
+      <div className="flex flex-1 min-h-0">
         {/* Sidebar */}
-        <div className="w-64 shrink-0">
-          <EmployeeSidebar
-            activeSection={activeSection}
-            setActiveSection={setActiveSection}
-            handleLogin={handleLogin}
-            handleLogout={handleLogout}
-            user={user}
-          />
-        </div>
+        <EmployeeSidebar
+          activeSection={activeSection}
+          setActiveSection={setActiveSection}
+          handleLogin={handleLogin}
+          handleLogout={handleLogout}
+          user={user}
+          isOpen={sidebarOpen}
+          onClose={() => setSidebarOpen(false)}
+        />
 
-        {/* Main section */}
+        {/* Main Content */}
         <main
-          className="flex-1 min-h-screen p-6 flex flex-col items-center justify-start pt-20
-            bg-[url('https://akriviahcm.com/blog/wp-content/uploads/2024/01/features-of-employee-management-system.png')]
-            bg-cover bg-center"
+          className={`flex-1 min-h-screen p-8 pt-24 flex flex-col items-center justify-start md:ml-72 overflow-auto transition-all duration-300`}
         >
           {activeSection === "dashboard" && (
-            <div className="flex flex-col items-center w-full gap-6 max-w-6xl">
-              {/* Quote */}
+            <div className="flex flex-col items-center w-full gap-10 max-w-6xl">
               <motion.p
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
-                className="text-center text-xl md:text-2xl text-[#38bdf8] italic font-semibold max-w-2xl"
+                className={`text-center text-2xl md:text-3xl italic font-semibold max-w-2xl select-none ${
+                  darkMode ? "text-[#A1F6FF]" : "text-[#274472]"
+                }`}
               >
-                "Success is the sum of small efforts, repeated day in and day out."
+                "Success is the sum of small efforts, repeated day in and day
+                out."
               </motion.p>
-
-              
+              {/* Announcements Card */}
               <motion.div
                 initial={{ opacity: 0, y: 40 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
-                className="w-full max-w-2xl bg-[#1e293b] p-5 rounded-lg shadow-lg mb-8"
+                className={`w-full max-w-2xl p-7 rounded-3xl shadow-xl mb-9 border
+                  ${
+                    darkMode
+                      ? "bg-[#112d4e] border-[#198FFF]/40"
+                      : "bg-[#E3EDF7] border-[#A5CDF2]/40"
+                  }`}
               >
-                <h2 className="text-lg md:text-xl font-semibold text-[#38bdf8] mb-3">
+                <h2
+                  className={`text-lg md:text-xl font-semibold mb-4
+                    ${darkMode ? "text-[#7DF9FF]" : "text-[#274472]"}
+                  `}
+                >
                   Recent Announcements
                 </h2>
-                <ul className="space-y-3">
-                  <li className="text-base text-white border-b border-[#38bdf8] pb-2">
-                    🚀 Company launches new benefits program effective October 1st.
+                <ul
+                  className={`${
+                    darkMode ? "text-[#A1F6FF]" : "text-[#1270BC]"
+                  } space-y-3`}
+                >
+                  <li
+                    className={`border-b ${
+                      darkMode ? "border-[#7DF9FF]/40" : "border-[#A5CDF2]/30"
+                    } pb-2`}
+                  >
+                    🚀 Company launches new benefits program effective October
+                    1st.
                   </li>
-                  <li className="text-base text-white border-b border-[#38bdf8] pb-2">
-                    📰 Q3 townhall scheduled for October 16th – join on Teams at 4pm.
+                  <li
+                    className={`border-b ${
+                      darkMode ? "border-[#7DF9FF]/40" : "border-[#A5CDF2]/30"
+                    } pb-2`}
+                  >
+                    📰 Q3 townhall scheduled for October 16th – join on Teams at
+                    4pm.
                   </li>
-                  <li className="text-base text-white pb-2">
-                    🎉 Welcome new team members in the Engineering and HR departments!
+                  <li>
+                    🎉 Welcome new team members in the Engineering and HR
+                    departments!
                   </li>
                 </ul>
               </motion.div>
             </div>
           )}
-
-          {/* View Profile Section */}
-          {activeSection === "viewProfile" && <ViewEmployeeProfile />}
-
-          {/* Edit Profile Section */}
-          {activeSection === "editProfile" && <EditEmployeeProfile />}
-
-         
+          {activeSection === "viewProfile" && (
+            <div className="w-full flex flex-col items-center">
+              <ViewEmployeeProfile />
+            </div>
+          )}
+          {activeSection === "editProfile" && (
+            <div className="w-full flex flex-col items-center">
+              <EditEmployeeProfile />
+            </div>
+          )}
+          {activeSection === "attendance" && (
+            <div className="w-full flex flex-col items-center">
+              <Attendance employeeId={user?._id} role="employee" />
+            </div>
+          )}
         </main>
       </div>
     </div>

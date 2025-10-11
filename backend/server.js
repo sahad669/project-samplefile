@@ -4,6 +4,7 @@ import connect from "./config/connectDB.js"
 import cors from "cors";
 import departmentRouter from './routes/departmentRouter.js'
 import userRouter from "./routes/userRouter.js"
+import attendanceRouter from "./routes/attendanceRouter.js"
 import upload from "./middleware/multer.js";
 
 dotenv.config();
@@ -13,6 +14,7 @@ app.use(cors());
 
 app.use("/api/department",departmentRouter)
 app.use("/api/users",userRouter)
+app.use("/api/attendance",attendanceRouter)
 
 connect();
 app.listen(process.env.PORT, () => {

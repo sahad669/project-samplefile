@@ -2,8 +2,8 @@ import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "../features/authSlice"
 import departmentReducer from "../features/departmentSlice"
 import employeeReducer from "../features/employeeSlice"
-
-
+import attendanceReducer from "../features/attendanceSlice"
+import themeReducer from "../features/themeSlice"
 
 
 export const Store = configureStore({
@@ -11,6 +11,8 @@ export const Store = configureStore({
         auth: authReducer,
         department:departmentReducer,
         employee:employeeReducer,
+        attendance:attendanceReducer,
+        theme:themeReducer
        
     }
 })

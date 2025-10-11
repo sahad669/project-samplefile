@@ -8,10 +8,12 @@ import {
 import { fetchDepartment } from "../features/departmentSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { Trash2, Loader2, Edit2 } from "lucide-react";
+import { motion } from "framer-motion";
 
 const Employees = () => {
   const { employees, loading } = useSelector((state) => state.employee);
   const { departments } = useSelector((state) => state.department);
+  const { darkMode } = useSelector((state) => state.theme);
 
   const [data, setData] = useState({
     name: "",
@@ -79,24 +81,44 @@ const Employees = () => {
   };
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 space-y-10">
+    <div
+      className={`w-full max-w-7xl mx-auto px-4 space-y-10 min-h-screen transition-colors duration-300 ${
+        darkMode ? "" : ""
+      }`}
+    >
       {/* Employee Form */}
-      <div className="bg-gradient-to-br from-[#1e293b] to-[#0f172a] shadow rounded-xl p-6 md:p-10">
-
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className={`shadow-xl rounded-2xl p-8 border ${
+          darkMode
+            ? "bg-[#112d4e] border-[#198FFF]/30"
+            : "bg-[#E3EDF7] border-[#5B99ED]/40"
+        }`}
+      >
         <form
           className="grid grid-cols-1 md:grid-cols-2 gap-6"
           onSubmit={handleSubmit}
         >
-          <h2 className="md:col-span-2 text-2xl font-bold text-[#38bdf8] mb-4">
+          <h2
+            className={`md:col-span-2 text-3xl font-bold mb-6 ${
+              darkMode ? "text-[#82E0FA]" : "text-[#274472]"
+            }`}
+          >
             {editId ? "Edit Employee" : "Add New Employee"}
           </h2>
-
           <input
             name="name"
             value={data.name}
             onChange={(e) => setData({ ...data, name: e.target.value })}
             placeholder="Full Name"
-            className="p-3 border bg-[#1e293b] text-white rounded-lg"
+            className={`p-3 rounded-lg border ${
+              darkMode
+                ? "border-[#198FFF] bg-[#274472] text-[#A1F6FF] placeholder-[#7DB9DB]"
+                : "border-[#5B99ED] bg-[#F6FAFF] text-[#274472] placeholder-[#8AAEDC]"
+            }`}
+            required
           />
           <input
             name="email"
@@ -104,32 +126,51 @@ const Employees = () => {
             value={data.email}
             onChange={(e) => setData({ ...data, email: e.target.value })}
             placeholder="Email"
-            className="p-3 border bg-[#1e293b] text-white rounded-lg"
+            className={`p-3 rounded-lg border ${
+              darkMode
+                ? "border-[#198FFF] bg-[#274472] text-[#A1F6FF] placeholder-[#7DB9DB]"
+                : "border-[#5B99ED] bg-[#F6FAFF] text-[#274472] placeholder-[#8AAEDC]"
+            }`}
+            required
           />
           <input
             name="phone"
             value={data.phone}
             onChange={(e) => setData({ ...data, phone: e.target.value })}
             placeholder="Phone"
-            className="p-3 border bg-[#1e293b] text-white rounded-lg"
+            className={`p-3 rounded-lg border ${
+              darkMode
+                ? "border-[#198FFF] bg-[#274472] text-[#A1F6FF] placeholder-[#7DB9DB]"
+                : "border-[#5B99ED] bg-[#F6FAFF] text-[#274472] placeholder-[#8AAEDC]"
+            }`}
           />
           <input
             name="password"
             type="password"
             value={data.password}
             onChange={(e) => setData({ ...data, password: e.target.value })}
-            placeholder={
-              editId ? " password" : "Password"
-            }
-            className="p-3 border bg-[#1e293b] text-white rounded-lg"
+            placeholder={editId ? "Password (leave blank to keep)" : "Password"}
+            className={`p-3 rounded-lg border ${
+              darkMode
+                ? "border-[#198FFF] bg-[#274472] text-[#A1F6FF] placeholder-[#7DB9DB]"
+                : "border-[#5B99ED] bg-[#F6FAFF] text-[#274472] placeholder-[#8AAEDC]"
+            }`}
+            {...(!editId && { required: true })}
           />
           <select
             name="role"
             value={data.role}
             onChange={(e) => setData({ ...data, role: e.target.value })}
-            className="p-3 border bg-[#1e293b] text-white rounded-lg"
+            className={`p-3 rounded-lg border ${
+              darkMode
+                ? "border-[#198FFF] bg-[#274472] text-[#A1F6FF]"
+                : "border-[#5B99ED] bg-[#F6FAFF] text-[#274472]"
+            }`}
+            required
           >
-            <option value="">Select Role</option>
+            <option value="" disabled>
+              Select Role
+            </option>
             <option value="employee">Employee</option>
             <option value="admin">Admin</option>
           </select>
@@ -137,7 +178,11 @@ const Employees = () => {
             name="department"
             value={data.department}
             onChange={(e) => setData({ ...data, department: e.target.value })}
-            className="p-3 border bg-[#1e293b] text-white rounded-lg"
+            className={`p-3 rounded-lg border ${
+              darkMode
+                ? "border-[#198FFF] bg-[#274472] text-[#A1F6FF]"
+                : "border-[#5B99ED] bg-[#F6FAFF] text-[#274472]"
+            }`}
           >
             <option value="">Select Department</option>
             {departments?.map((dep) => (
@@ -148,44 +193,64 @@ const Employees = () => {
           </select>
           <input
             type="file"
-            className="p-3 border bg-[#1e293b] text-white rounded-lg md:col-span-2"
+            className={`p-3 rounded-lg border md:col-span-2 ${
+              darkMode
+                ? "border-[#198FFF] bg-[#274472] text-[#A1F6FF]"
+                : "border-[#5B99ED] bg-[#F6FAFF] text-[#274472]"
+            }`}
             onChange={(e) => setImage(e.target.files[0])}
           />
 
-          <div className="md:col-span-2 flex gap-3">
+          <div className="md:col-span-2 flex gap-4">
             <button
               type="submit"
               disabled={loading}
-              className="bg-[#38bdf8] hover:bg-[#0ea5e9] text-white font-semibold py-2 px-4 rounded-lg transition"
+              className="bg-[#47CFFF] hover:bg-[#82E0FA] text-[#112d4e] font-semibold py-3 px-6 rounded-lg transition shadow-md"
             >
               {loading ? (
-                <Loader2 className="animate-spin w-5 h-5 mx-auto" />
+                <Loader2 className="animate-spin w-6 h-6 mx-auto" />
               ) : editId ? (
                 "Update Employee"
               ) : (
                 "Add Employee"
               )}
             </button>
-
             {editId && (
               <button
                 type="button"
                 onClick={resetForm}
-                className="bg-gray-500 py-2 px-4 rounded font-semibold text-white hover:bg-gray-600"
+                className="bg-gray-600 py-3 px-6 rounded-lg font-semibold text-white hover:bg-gray-700 transition shadow-md"
               >
                 Cancel
               </button>
             )}
           </div>
         </form>
-      </div>
-
+      </motion.div>
       {/* Employee Table */}
-      <div className="bg-gradient-to-br from-[#1e293b] to-[#0f172a] shadow rounded-xl p-6">
-        <h2 className="text-3xl font-bold text-[#38bdf8] mb-4">Employees</h2>
-        <div className="overflow-x-auto">
-          <table className="min-w-full text-left text-sm text-gray-300">
-            <thead className="bg-[#0f172a] text-gray-200 uppercase text-xs">
+      <div
+        className={`shadow-xl rounded-2xl p-6 border ${
+          darkMode
+            ? "bg-[#112d4e] border-[#198FFF]/30"
+            : "bg-[#E3EDF7] border-[#5B99ED]/40"
+        }`}
+      >
+        <h2
+          className={`text-4xl font-bold mb-6 ${
+            darkMode ? "text-[#82E0FA]" : "text-[#274472]"
+          }`}
+        >
+          Employees
+        </h2>
+        <div className="overflow-x-auto rounded-lg">
+          <table className="min-w-full text-left text-sm table-auto">
+            <thead
+              className={`text-xs uppercase ${
+                darkMode
+                  ? "bg-[#274472] text-[#A1F6FF]"
+                  : "bg-[#A5CDF2] text-[#21314A]"
+              }`}
+            >
               <tr>
                 <th className="px-6 py-3">Image</th>
                 <th className="px-6 py-3">Name</th>
@@ -198,39 +263,62 @@ const Employees = () => {
               {employees?.map((emp) => (
                 <tr
                   key={emp._id}
-                  className="border-b border-gray-700 hover:bg-[#1e293b] transition"
+                  className={`border-b transition ${
+                    darkMode
+                      ? "border-[#47CFFF]/40 hover:bg-[#1A446B]"
+                      : "border-[#7DF9FF]/40 hover:bg-[#D9EEFF]"
+                  }`}
                 >
                   <td className="px-4 py-2">
                     <img
                       src={emp.imageurl || "https://via.placeholder.com/80"}
                       alt={emp.name}
-                      className="w-10 h-10 rounded-full object-cover"
+                      className="w-12 h-12 rounded-full object-cover"
                     />
                   </td>
-                  <td className="px-4 py-2">{emp.name}</td>
-                  <td className="px-4 py-2">{emp.email}</td>
-                  <td className="px-4 py-2">
+                  <td
+                    className={`px-4 py-2 ${
+                      darkMode ? "text-[#A1F6FF]" : "text-[#274472]"
+                    }`}
+                  >
+                    {emp.name}
+                  </td>
+                  <td
+                    className={`px-4 py-2 ${
+                      darkMode ? "text-[#A1F6FF]" : "text-[#274472]"
+                    }`}
+                  >
+                    {emp.email}
+                  </td>
+                  <td
+                    className={`px-4 py-2 ${
+                      darkMode ? "text-[#A1F6FF]" : "text-[#274472]"
+                    }`}
+                  >
                     {emp.department?.department || "No Department"}
                   </td>
-                  <td className="px-4 py-2 flex gap-2">
+                  <td className="px-4 py-2 flex gap-3">
                     <button
                       onClick={() => handleEdit(emp)}
-                      className="bg-blue-500 hover:bg-blue-600 transition-colors duration-300 text-white px-3 py-1 rounded shadow-md flex items-center gap-1"
+                      className="bg-[#47CFFF] hover:bg-[#82E0FA] text-[#112d4e] px-4 py-1 rounded-lg shadow-md flex items-center gap-2 transition"
                     >
-                      <Edit2 size={16} /> Edit
+                      <Edit2 size={18} /> Edit
                     </button>
                     <button
                       onClick={() => handleDelete(emp._id)}
-                      className="bg-red-500 hover:bg-red-600 transition-colors duration-300 text-white px-3 py-1 rounded shadow-md flex items-center gap-1"
+                      className="bg-red-600 hover:bg-red-700 text-white px-4 py-1 rounded-lg shadow-md flex items-center gap-2 transition"
                     >
-                      <Trash2 size={16} /> Delete
+                      <Trash2 size={18} /> Delete
                     </button>
                   </td>
                 </tr>
               ))}
               {employees?.length === 0 && (
                 <tr>
-                  <td colSpan="5" className="text-center text-md py-4 text-red-400">
+                  <td
+                    colSpan={5}
+                    className="text-center py-6 text-red-400 font-semibold"
+                  >
                     No employees found
                   </td>
                 </tr>
