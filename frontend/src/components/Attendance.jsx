@@ -1,3 +1,4 @@
+
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import {
@@ -7,6 +8,19 @@ import {
 } from "../features/attendanceSlice";
 import { Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
+import {
+  PieChart,
+  Pie,
+  Cell,
+  Tooltip,
+  Legend,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  ResponsiveContainer,
+} from "recharts";
 
 const Attendance = ({ employeeId, role }) => {
   const dispatch = useDispatch();
@@ -21,6 +35,7 @@ const Attendance = ({ employeeId, role }) => {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
 
+  // Fetch attendance
   useEffect(() => {
     if (role === "admin") {
       dispatch(getAttendance("all?role=admin"));
@@ -39,7 +54,7 @@ const Attendance = ({ employeeId, role }) => {
     dispatch(deleteAttendance(id));
   };
 
-  // Apply search/filter only if admin
+  // Filtering for Admin
   const filteredAttendanceRecords =
     role === "admin"
       ? attendance?.filter((record) => {
@@ -52,12 +67,43 @@ const Attendance = ({ employeeId, role }) => {
         })
       : attendance;
 
+  // Chart data calculations
+  const presentCount = filteredAttendanceRecords?.filter(
+    (a) => a.status === "Present"
+  ).length;
+  const absentCount = filteredAttendanceRecords?.filter(
+    (a) => a.status === "Absent"
+  ).length;
+
+  const pieData = [
+    { name: "Present", value: presentCount || 0 },
+    { name: "Absent", value: absentCount || 0 },
+  ];
+
+  let barData = [];
+  if (role === "admin") {
+    const employeeStats = {};
+    filteredAttendanceRecords?.forEach((record) => {
+      const name = record.employee?.name || "Unknown";
+      if (!employeeStats[name]) {
+        employeeStats[name] = { Present: 0, Absent: 0 };
+      }
+      employeeStats[name][record.status] =
+        (employeeStats[name][record.status] || 0) + 1;
+    });
+    barData = Object.keys(employeeStats).map((name) => ({
+      name,
+      Present: employeeStats[name].Present,
+      Absent: employeeStats[name].Absent,
+    }));
+  }
+
   return (
     <motion.div
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className={`w-full max-w-5xl mx-auto p-8 rounded-2xl shadow-2xl border transition-colors duration-300 ${
+      className={`w-full max-w-6xl mx-auto p-8 rounded-2xl shadow-2xl border transition-colors duration-300 ${
         darkMode
           ? "bg-gradient-to-br from-[#112d4e] via-[#274472] to-[#47CFFF] border-[#198FFF]/40 text-[#A1F6FF]"
           : "bg-gradient-to-br from-[#E3EDF7] via-[#A5CDF2] to-[#7DF9FF] border-[#5B99ED]/40 text-[#274472]"
@@ -71,7 +117,7 @@ const Attendance = ({ employeeId, role }) => {
         Attendance Records
       </h2>
 
-      {/* Date picker + Mark buttons */}
+      {/* Employee date picker + mark buttons */}
       {role === "employee" && (
         <div className="flex gap-4 mb-6 items-center justify-center">
           <input
@@ -99,7 +145,7 @@ const Attendance = ({ employeeId, role }) => {
         </div>
       )}
 
-      {/* Admin Search and Filter */}
+      {/* Admin Search + Filter */}
       {role === "admin" && (
         <div className="flex gap-4 mb-8 items-center justify-center">
           <input
@@ -129,6 +175,7 @@ const Attendance = ({ employeeId, role }) => {
         </div>
       )}
 
+      {/* Attendance Table */}
       {loading ? (
         <div className="flex justify-center items-center mt-10">
           <Loader2
@@ -226,8 +273,61 @@ const Attendance = ({ employeeId, role }) => {
           </table>
         </div>
       )}
+
+      {/* Chart Section: Always Centered */}
+      <div className="my-10 flex justify-center items-center w-full">
+        {role !== "admin" && (
+          <div className="p-4 bg-white/10 rounded-xl shadow-lg flex justify-center items-center w-full max-w-md">
+            <div className="w-full">
+              <h3 className="text-center font-semibold mb-2 text-white">
+                Present vs Absent
+              </h3>
+              <ResponsiveContainer width="100%" height={250}>
+                <PieChart>
+                  <Pie
+                    data={pieData}
+                    dataKey="value"
+                    nameKey="name"
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={80}
+                    label
+                  >
+                    <Cell fill="#38bdf8" />
+                    <Cell fill="#ef4444" />
+                  </Pie>
+                  <Tooltip />
+                  <Legend />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        )}
+
+        {role === "admin" && (
+          <div className="p-4 bg-white/10 rounded-xl shadow-lg flex justify-center items-center w-full max-w-2xl">
+            <div className="w-full">
+              <h3 className="text-center font-semibold mb-2">
+                Attendance by Employee
+              </h3>
+              <ResponsiveContainer width="100%" height={250}>
+                <BarChart data={barData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" stroke="#fff" />
+                  <YAxis stroke="#fff" />
+                  <Tooltip />
+                  <Legend />
+                  <Bar dataKey="Present" fill="#38bdf8" />
+                  <Bar dataKey="Absent" fill="#ef4444" />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        )}
+      </div>
     </motion.div>
   );
 };
 
 export default Attendance;
+
