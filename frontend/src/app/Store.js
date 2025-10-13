@@ -4,6 +4,7 @@ import departmentReducer from "../features/departmentSlice"
 import employeeReducer from "../features/employeeSlice"
 import attendanceReducer from "../features/attendanceSlice"
 import themeReducer from "../features/themeSlice"
+import contactReducer from "../features/contactSlice"
 
 
 export const Store = configureStore({
@@ -12,7 +13,8 @@ export const Store = configureStore({
         department:departmentReducer,
         employee:employeeReducer,
         attendance:attendanceReducer,
-        theme:themeReducer
+        theme:themeReducer,
+        messages: contactReducer,
        
     }
 })

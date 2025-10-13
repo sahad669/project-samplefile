@@ -9,9 +9,11 @@ import DepartmentCards from "../components/DepartmentCard";
 import EmployeeList from "../components/EmployeeList";
 import Employees from "../components/Employees";
 import Attendance from "../components/Attendance";
+import AdminMessages from "../components/AdminMessages";
 import EmployeeDetails from "../components/EmployeeDetails";
 import { fetchDepartment } from "../features/departmentSlice";
 import { fetchEmployee } from "../features/employeeSlice";
+import { fetchMessages } from "../features/contactSlice";
 import { motion } from "framer-motion";
 
 const AdminDashboard = () => {
@@ -25,6 +27,7 @@ const AdminDashboard = () => {
   const { departments } = useSelector((state) => state.department);
   const { employees } = useSelector((state) => state.employee);
   const { darkMode } = useSelector((state) => state.theme);
+  const { list } = useSelector((state) => state.messages);
 
   const handleLogout = () => {
     dispatch(logout());
@@ -35,6 +38,7 @@ const AdminDashboard = () => {
   useEffect(() => {
     dispatch(fetchDepartment());
     dispatch(fetchEmployee());
+     dispatch(fetchMessages())
   }, [dispatch]);
 
   return (
@@ -120,6 +124,19 @@ const AdminDashboard = () => {
                   <span className="text-6xl mb-4">📅</span>
                   <h1 className="text-xl font-bold">ATTENDANCE</h1>
                 </motion.div>
+                <motion.div
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="rounded-3xl shadow-xl p-10 h-56 flex flex-col items-center justify-center cursor-pointer border
+    border-[#82E0FA]/30 bg-gradient-to-br from-[#82E0FA] to-[#A1F6FF]"
+                  onClick={() => setActiveSection("messages")}
+                >
+                  <span className="text-6xl mb-4">📩</span>
+                  <h1 className="text-xl font-bold">MESSAGES</h1>
+                  <span className="text-3xl font-bold mt-1">
+                    {list.length}
+                  </span>
+                </motion.div>
               </div>
             </div>
           )}
@@ -141,6 +158,7 @@ const AdminDashboard = () => {
           )}
           {activeSection === "addEmployees" && <Employees />}
           {activeSection === "attendance" && <Attendance role="admin" />}
+          {activeSection === "messages" && <AdminMessages />}
         </main>
       </div>
     </div>

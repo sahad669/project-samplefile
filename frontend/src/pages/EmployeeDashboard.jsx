@@ -7,6 +7,7 @@ import EmployeeSidebar from "../components/EmployeeSidebar";
 import ViewEmployeeProfile from "../components/ViewEmployeeProfile";
 import EditEmployeeProfile from "../components/EditEmployeeProfile";
 import Attendance from "../components/Attendance";
+import Contact from "../components/Contact"
 import { motion } from "framer-motion";
 
 const EmployeeDashboard = () => {
@@ -127,11 +128,19 @@ const EmployeeDashboard = () => {
               <EditEmployeeProfile />
             </div>
           )}
+
+           {activeSection === "contacts" && (
+            <div className="w-full flex flex-col items-center">
+              <Contact />
+            </div>
+          )}
+          
           {activeSection === "attendance" && (
             <div className="w-full flex flex-col items-center">
               <Attendance employeeId={user?._id} role="employee" />
             </div>
           )}
+          
         </main>
       </div>
     </div>

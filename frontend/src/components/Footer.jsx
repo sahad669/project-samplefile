@@ -6,7 +6,7 @@ const Footer = () => {
   const { darkMode } = useSelector((state) => state.theme);
   return (
     <footer
-      className={`w-full border-t py-6 mt-auto sticky bottom-0 z-40 ${
+      className={`w-full border-t py-5  sticky bottom-0 z-40 ${
         darkMode
           ? "bg-gradient-to-r from-[#0A2540] via-[#274472] to-[#198FFF] border-[#198FFF]/30"
           : "bg-gradient-to-r from-[#E3EDF7] via-[#F6F9FC] to-[#A5CDF2] border-[#5B99ED]/20"
@@ -14,7 +14,7 @@ const Footer = () => {
     >
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-center items-center px-6 gap-4">
         <div
-          className={`flex space-x-6 ${
+          className={`flex space-x-1 ${
             darkMode ? "text-white" : "text-[#21314A]"
           }`}
         >
