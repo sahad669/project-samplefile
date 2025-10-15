@@ -11,15 +11,18 @@ import Employees from "../components/Employees";
 import Attendance from "../components/Attendance";
 import AdminMessages from "../components/AdminMessages";
 import EmployeeDetails from "../components/EmployeeDetails";
+// import ChatBot from "../components/ChatBot";
 import { fetchDepartment } from "../features/departmentSlice";
 import { fetchEmployee } from "../features/employeeSlice";
 import { fetchMessages } from "../features/contactSlice";
 import { motion } from "framer-motion";
+import { IoChatbubbleEllipses } from "react-icons/io5";
 
 const AdminDashboard = () => {
   const [activeSection, setActiveSection] = useState("dashboard");
   const [selectedEmployeeId, setSelectedEmployeeId] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [chatOpen, setChatOpen] = useState(false);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -38,7 +41,7 @@ const AdminDashboard = () => {
   useEffect(() => {
     dispatch(fetchDepartment());
     dispatch(fetchEmployee());
-     dispatch(fetchMessages())
+    dispatch(fetchMessages());
   }, [dispatch]);
 
   return (
@@ -133,11 +136,23 @@ const AdminDashboard = () => {
                 >
                   <span className="text-6xl mb-4">📩</span>
                   <h1 className="text-xl font-bold">MESSAGES</h1>
-                  <span className="text-3xl font-bold mt-1">
-                    {list.length}
-                  </span>
+                  <span className="text-3xl font-bold mt-1">{list.length}</span>
                 </motion.div>
               </div>
+
+              {/* {!chatOpen && (
+                <button
+                  onClick={() => setChatOpen(true)}
+                  className="fixed top-30 right-6 bg-gradient-to-br from-[#198FFF] to-[#7DF9FF] 
+               hover:from-[#7DF9FF] hover:to-[#198FFF] text-white rounded-full p-4 shadow-2xl 
+               transition-all duration-300 z-50"
+                >
+                  <IoChatbubbleEllipses size={28} />
+                </button>
+              )} */}
+
+              {/* ChatBot Panel */}
+              {/* <ChatBot isOpen={chatOpen} onClose={() => setChatOpen(false)} /> */}
             </div>
           )}
           {activeSection === "addDepartment" && <Departments />}

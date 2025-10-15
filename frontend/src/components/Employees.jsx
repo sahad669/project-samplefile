@@ -260,14 +260,18 @@ const Employees = () => {
               </tr>
             </thead>
             <tbody>
-              {employees?.map((emp) => (
+              {employees?.map((emp,idx) => (
                 <tr
                   key={emp._id}
-                  className={`border-b transition ${
-                    darkMode
-                      ? "border-[#47CFFF]/40 hover:bg-[#1A446B]"
-                      : "border-[#7DF9FF]/40 hover:bg-[#D9EEFF]"
-                  }`}
+                 className={`transition-colors ${
+                      darkMode
+                        ? idx % 2 === 0
+                          ? "bg-[#112d4e]"
+                          : "bg-[#1A446B]"
+                        : idx % 2 === 0
+                        ? "bg-[#F6FAFF]"
+                        : "bg-[#D9EEFF]"
+                    } hover:bg-[#82E0FA]/40`}
                 >
                   <td className="px-4 py-2">
                     <img

@@ -137,23 +137,27 @@ const Departments = () => {
                   }`}
                 >
                   <tr>
-                    <th className="px-6 py-3 text-[#ccff15] text-left">
+                    <th className="px-6 py-3 text-[#A1F6FF] text-left">
                       Department
                     </th>
-                    <th className="px-6 py-3 text-[#ccff15] text-center">
+                    <th className="px-6 py-3 text-[#A1F6FF] text-center">
                       Action
                     </th>
                   </tr>
                 </thead>
                 <tbody>
-                  {departments.map((dep) => (
+                  {departments.map((dep,idx) => (
                     <tr
                       key={dep._id}
-                      className={`border-b transition-colors ${
-                        darkMode
-                          ? "border-[#47CFFF]/40 hover:bg-[#1A446B]"
-                          : "border-[#7DF9FF]/40 hover:bg-[#D9EEFF]"
-                      }`}
+                     className={`transition-colors ${
+                      darkMode
+                        ? idx % 2 === 0
+                          ? "bg-[#112d4e]"
+                          : "bg-[#1A446B]"
+                        : idx % 2 === 0
+                        ? "bg-[#F6FAFF]"
+                        : "bg-[#D9EEFF]"
+                    } hover:bg-[#82E0FA]/40`}
                     >
                       <td
                         className={`px-6 py-3 font-semibold ${

@@ -7,10 +7,13 @@ import userRouter from "./routes/userRouter.js"
 import attendanceRouter from "./routes/attendanceRouter.js"
 import upload from "./middleware/multer.js";
 import contactRouter from "./routes/contact.js"
+
 dotenv.config();
 const app = express();
 app.use(express.json());
 app.use(cors());
+
+
 
 app.use("/api/department",departmentRouter)
 app.use("/api/users",userRouter)

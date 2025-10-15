@@ -9,9 +9,11 @@ import EditEmployeeProfile from "../components/EditEmployeeProfile";
 import Attendance from "../components/Attendance";
 import Contact from "../components/Contact"
 import { motion } from "framer-motion";
+import { IoChatbubbleEllipses } from "react-icons/io5";
 
 const EmployeeDashboard = () => {
   const [activeSection, setActiveSection] = useState("dashboard");
+   const [chatOpen, setChatOpen] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.auth);
@@ -117,6 +119,7 @@ const EmployeeDashboard = () => {
                 </ul>
               </motion.div>
             </div>
+            
           )}
           {activeSection === "viewProfile" && (
             <div className="w-full flex flex-col items-center">
@@ -140,6 +143,19 @@ const EmployeeDashboard = () => {
               <Attendance employeeId={user?._id} role="employee" />
             </div>
           )}
+              {/* {!chatOpen && (
+                <button
+                  onClick={() => setChatOpen(true)}
+                  className="fixed top-30 right-6 bg-gradient-to-br from-[#198FFF] to-[#7DF9FF] 
+               hover:from-[#7DF9FF] hover:to-[#198FFF] text-white rounded-full p-4 shadow-2xl 
+               transition-all duration-300 z-50"
+                >
+                  <IoChatbubbleEllipses size={28} />
+                </button>
+              )} */}
+
+              {/* ChatBot Panel */}
+              {/* <ChatBot isOpen={chatOpen} onClose={() => setChatOpen(false)} /> */}
           
         </main>
       </div>

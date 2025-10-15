@@ -1,7 +1,7 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { toggleTheme } from "../features/themeSlice";
-import { Sun, Moon, X } from "lucide-react";
+import { Sun, Moon  } from "lucide-react";
 
 const AdminSidebar = ({
   activeSection,
